@@ -1,0 +1,3 @@
+rootProject.name='YoutubeIFrame'
+include ':app'
+include ':app:youtube-iframe-fragment'
