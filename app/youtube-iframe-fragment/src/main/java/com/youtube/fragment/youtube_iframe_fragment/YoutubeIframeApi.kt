@@ -13,6 +13,42 @@ import java.lang.ref.WeakReference
 
 class YoutubeIframeApi (private val webview:WebView, private val fragment: YoutubeIframeFragment){
 
+    private fun createWebContent2(videoId: String):String{
+        return """
+                <!DOCTYPE html>
+            <html>
+              <body > 
+                <style>
+                    .container {
+                        position: relative;
+                        width: 100%;
+                        height: 0;
+                        padding-bottom: 56.25%;
+                       
+                    }
+                    .video {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                    }
+                </style>
+                <script>
+                    function play(){
+                        var myvideo = document.getElementsByTagName('iframe')[0]; 
+                        myvideo.play();
+                    }
+                </script>
+                <div class="container">
+                    <iframe class="video" src="https://www.youtube.com/embed/$videoId?rel=0&amp;controls=1&amp;showinfo=1&amp;autoplay=1" 
+                    frameborder="0"  encrypted-media allowfullscreen allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    onload="play();"/>
+            </div>
+            </body>
+        </html> 
+        """
+    }
     private fun createWebContent(videoId:String, width:Int, height:Int) :String{
 
         return """
@@ -79,13 +115,21 @@ class YoutubeIframeApi (private val webview:WebView, private val fragment: Youtu
     fun loadVideo(videoId:String, width: Int, height: Int){
         webview.settings.javaScriptEnabled = true
         webview.settings.mediaPlaybackRequiresUserGesture = false
-        
-        webview.loadData(createWebContent(videoId, width,height),"",
-            charset("UTF-8").toString())
-
         webview.webChromeClient = ChromeClient(fragment.activity?.window!!, fragment.activity!!)
         webview.webViewClient = WebClient()
 
+        webview.loadData(createWebContent(videoId, width,height),"",
+            charset("UTF-8").toString())
+    }
+
+    fun loadVideo(videoId:String){
+        webview.settings.javaScriptEnabled = true
+        webview.settings.mediaPlaybackRequiresUserGesture = false
+        webview.webChromeClient = ChromeClient(fragment.activity?.window!!, fragment.activity!!)
+        webview.webViewClient = WebClient()
+
+        webview.loadData(createWebContent2(videoId),"",
+            charset("UTF-8").toString())
     }
 
     internal class ChromeClient (private val window:Window, private val activity: Activity): WebChromeClient() {

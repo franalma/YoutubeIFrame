@@ -12,11 +12,12 @@ class YoutubePlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_youtube_player)
+        val localWith =
         GlobalScope.launch {
             delay(1000)
             runOnUiThread {
                 supportFragmentManager.beginTransaction().replace(R.id.id_container,
-                YoutubeIframeFragment.newInstance("M7lc1UVf-VE")).commit()
+                YoutubeIframeFragment.newInstance("M7lc1UVf-VE", 0,0,true)).commit()
             }
         }
     }
